@@ -17,12 +17,13 @@ long long K = 1;
 std::vector<long long> query_nodes;
 
 int main(int argc, char** argv) {
+    
+    // Initialize the MPI environment
+    MPI_Init(NULL, NULL);
+
     std::chrono::high_resolution_clock::time_point start;
     std::chrono::high_resolution_clock::time_point stop;
     start = std::chrono::high_resolution_clock::now();
-
-    // Initialize the MPI environment
-    MPI_Init(NULL, NULL);
 
     // Get the number of processes
     int world_size;
@@ -131,9 +132,10 @@ int main(int argc, char** argv) {
 
     stop = std::chrono::high_resolution_clock::now();
     if(world_rank == 0) {
+        //std::cout <<  << std::endl;
         auto time_diff = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
         std::cout << "#vertices in subgraph: " << skeleton_graph.vertices.size() << std::endl; 
-        std::cout << "#Edges in subgraph: " << skeleton_graph.edges.size() << std::endl; 
+        std::cout << "#Edges in subgraph: " << edges.size() << std::endl; 
         std::cout << "Time taken to generate skeleton graph on all nodes: " << (time_diff.count() / 1000000) << " seconds" << std::endl; 
     }
 
