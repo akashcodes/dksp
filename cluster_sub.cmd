@@ -17,7 +17,7 @@
 
 ## Number of nodes and processor per node to request
 ## Requesting 6 nodes and 1 processor per node
-#PBS -l select=20:ncpus=1
+#PBS -l select=10:ncpus=4
 
 ## Get the job id
 job_id=`echo $PBS_JOBID | cut -f 1 -d .`
