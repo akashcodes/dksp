@@ -5,28 +5,28 @@
 using namespace std;
 int main() {
     ios::sync_with_stdio(true);
-    int n;
+    long long n;
     
     cin >> n;
     // cout<<n<<" Edges\n";
-    vector<vector<int> > edges;
-    for(int i = 0; i < n; i++) {
+    vector<vector<long long> > edges;
+    for(long long i = 0; i < n; i++) {
         //cout<<i<<" ";
-        edges.push_back(vector<int>(3, 0));
+        edges.push_back(vector<long long>(3, 0));
         cin>>edges[i][0];
         cin>>edges[i][1];
         cin>>edges[i][2];
 
     }
 
-    int m;
+    long long m;
 
     cin >> m;
 
-    vector<int> boundary_vertices;
+    vector<long long> boundary_vertices;
 
-    for(int i = 0; i < m; i++) {
-        int b;
+    for(long long i = 0; i < m; i++) {
+        long long b;
         cin >> b;
 
         boundary_vertices.push_back(b);
@@ -34,7 +34,8 @@ int main() {
 
     Graph subgraph = Graph(edges, boundary_vertices);
     subgraph.initialise_bounding_paths(1);
-    cout<<"Graph generated successfully\n";
+    cout<<"Graph generated successfully\n" << endl;
+    cout << subgraph.edges.size() << endl;
     /*
     subgraph.print_neighbours(1230);
     subgraph.print_neighbours(955);
@@ -61,7 +62,7 @@ int main() {
         
     }
     */
-    cout << subgraph.bp.size() << endl;
+    //cout << subgraph.bp.size() << endl;
     //subgraph.initialise_bounding_paths(1);
 
     return 0;

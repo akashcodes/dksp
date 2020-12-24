@@ -20,10 +20,7 @@ int main(int argc, char** argv) {
     
     // Initialize the MPI environment
     MPI_Init(NULL, NULL);
-
-    std::chrono::high_resolution_clock::time_point start;
-    std::chrono::high_resolution_clock::time_point stop;
-    start = std::chrono::high_resolution_clock::now();
+    
 
     // Get the number of processes
     int world_size;
@@ -32,6 +29,12 @@ int main(int argc, char** argv) {
     // Get the rank of the process
     int world_rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
+
+    std::chrono::high_resolution_clock::time_point start;
+    std::chrono::high_resolution_clock::time_point stop;
+    if(world_rank == 0) {
+        start = std::chrono::high_resolution_clock::now();
+    }
 
     std::vector<Graph*> subgraphs;
     for(long long i = world_rank; i < N_SUBGRAPHS; i += world_size) {
@@ -130,9 +133,10 @@ int main(int argc, char** argv) {
 
     MPI_Barrier(MPI_COMM_WORLD);
 
-    stop = std::chrono::high_resolution_clock::now();
+    
     if(world_rank == 0) {
         //std::cout <<  << std::endl;
+        stop = std::chrono::high_resolution_clock::now();
         auto time_diff = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
         std::cout << "#vertices in subgraph: " << skeleton_graph.vertices.size() << std::endl; 
         std::cout << "#Edges in subgraph: " << edges.size() << std::endl; 
