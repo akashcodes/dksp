@@ -16,8 +16,7 @@
 #PBS -l cput=00:10:00
 
 ## Number of nodes and processor per node to request
-## Requesting 6 nodes and 1 processor per node
-#PBS -l select=10:ncpus=4
+#PBS -l select=1:ncpus=1
 
 ## Get the job id
 job_id=`echo $PBS_JOBID | cut -f 1 -d .`
@@ -26,7 +25,8 @@ job_id=`echo $PBS_JOBID | cut -f 1 -d .`
 np=$(wc -l < $PBS_NODEFILE)
 
 ## Run the job
-I_MPI_HYDRA_TOPOLIB=ipl mpiexec.hydra -np $np -genv OMP_NUM_THREADS=1 -genv I_MPI_PIN=1 -genv I_MPI_FABRICS=shm:ofi -hostfile $PBS_NODEFILE $PBS_O_WORKDIR/main > $PBS_O_WORKDIR/output.txt
+#I_MPI_HYDRA_TOPOLIB=ipl mpiexec.hydra -np $np -genv OMP_NUM_THREADS=1 -genv I_MPI_PIN=1 -genv I_MPI_FABRICS=shm:ofi -hostfile $PBS_NODEFILE $PBS_O_WORKDIR/main > $PBS_O_WORKDIR/output.txt
+mpiexec.hydra -np $np -genv OMP_NUM_THREADS=1 -genv I_MPI_PIN=1 -genv I_MPI_FABRICS=shm:ofi -hostfile $PBS_NODEFILE $PBS_O_WORKDIR/main > $PBS_O_WORKDIR/output.txt
 
 #echo "$np" > out.txt
 

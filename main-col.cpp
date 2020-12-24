@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include <string>
 #include <chrono>
+#include <cstdio>
 #include "graph.hpp"
 #include "col-queries.hpp"
 
@@ -110,6 +111,7 @@ int main(int argc, char** argv) {
             si++;
         }
         MPI_Bcast(data, n, MPI_LONG_LONG, pid, MPI_COMM_WORLD);
+        MPI_Barrier(MPI_COMM_WORLD);
         for(long long j = 0; j < n; j += 3) {
             //edges.push_back({data[j+0], data[j+1], data[j+2]});
             long long u = data[j+0];
@@ -122,7 +124,6 @@ int main(int argc, char** argv) {
                 adj[u][v] = w;
             }
         }
-        MPI_Barrier(MPI_COMM_WORLD);
     }
     for(auto v1: adj) {
         for(auto v2 : v1.second) {
@@ -130,9 +131,6 @@ int main(int argc, char** argv) {
         }
     }
     Graph skeleton_graph = Graph(edges, std::vector<long long>());
-
-    MPI_Barrier(MPI_COMM_WORLD);
-
     
     if(world_rank == 0) {
         //std::cout <<  << std::endl;
@@ -141,6 +139,28 @@ int main(int argc, char** argv) {
         std::cout << "#vertices in subgraph: " << skeleton_graph.vertices.size() << std::endl; 
         std::cout << "#Edges in subgraph: " << edges.size() << std::endl; 
         std::cout << "Time taken to generate skeleton graph on all nodes: " << (time_diff.count() / 1000000) << " seconds" << std::endl; 
+
+        start = std::chrono::high_resolution_clock::now();
+    }
+
+    /*for(auto query : QUERIES) {
+        long long source = query[0];
+        long long dest = query[1];
+    }*/
+    for(long long i = 0; i < QUERIES.size(); i++) {
+        long long pid = i%world_size;
+        long long s = QUERIES[i][0];
+        long long t = QUERIES[i][1];
+        skeleton_graph.get_shortest_path(skeleton_graph.vertices[s], skeleton_graph.vertices[t]);
+    }
+
+    MPI_Barrier(MPI_Comm comm);
+
+    if(world_rank == 0) {
+        stop = std::chrono::high_resolution_clock::now();
+        auto time_diff = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+        std::cout << "Time taken to process 1000 queries: " << (time_diff.count() / 1000000) << " seconds" << std::endl; 
+
     }
 
     // Finalize the MPI environment.
